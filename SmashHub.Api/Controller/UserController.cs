@@ -1,0 +1,53 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using SmashHub.Api.Models;
+
+namespace SmashHub.Api.Controller
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class UserController : ControllerBase
+    {
+        private static List<User> _users = new List<User>();
+
+        [HttpGet]
+        public IActionResult GetAll() => Ok(_users);
+
+        [HttpGet("{id}")]
+        public IActionResult GetById(int id)
+        {
+            var user = _users.FirstOrDefault(u => u.Id == id);
+            if (user == null) return NotFound();
+            return Ok(user);
+        }
+
+        [HttpPost]
+        public IActionResult Create(User user)
+        {
+            _users.Add(user);
+            return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, User updated)
+        {
+            var user = _users.FirstOrDefault(u => u.Id == id);
+            if (user == null) return NotFound();
+
+            user.Username = updated.Username;
+            user.Email = updated.Email;
+            user.IsActive = updated.IsActive;
+
+            return Ok(user);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            var user = _users.FirstOrDefault(u => u.Id == id);
+            if (user == null) return NotFound();
+
+            _users.Remove(user);
+            return NoContent();
+        }
+    }
+}
