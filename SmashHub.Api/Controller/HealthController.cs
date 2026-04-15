@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace SmashHub.Api.Controllers
+
+namespace SmashHub.Api.Controller
 {
     [ApiController]
     [Route("api/[controller]")]
