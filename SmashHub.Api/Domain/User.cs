@@ -1,4 +1,4 @@
-namespace SmashHub.Api.Models
+namespace SmashHub.Api.Domain
 {
     public class User
     {
