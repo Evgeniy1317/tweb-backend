@@ -1,6 +1,6 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace SmashHub.Api.Domain
+namespace SmashHub.Domain
 {
     public class User
     {
@@ -19,7 +19,6 @@ namespace SmashHub.Api.Domain
         public string Password { get; set; } = string.Empty;
 
         public string Phone { get; set; } = string.Empty;
-
         public string Avatar { get; set; } = string.Empty;
     }
 }

@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using SmashHub.Api.Domain;
+using SmashHub.Domain;
 
 namespace SmashHub.Api.Controller
 {
