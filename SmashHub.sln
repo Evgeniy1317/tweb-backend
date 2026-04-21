@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmashHub.Helpers", "SmashHu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmashHub.BusinessLogic", "SmashHub.BusinessLogic\SmashHub.BusinessLogic.csproj", "{687171E2-8D8E-4FBA-9CFB-8C33F621DC75}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmashHub.Model", "SmashHub.Model\SmashHub.Model.csproj", "{9F0D9DC4-87B1-4765-97A0-82420991C68A}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,18 +69,6 @@ Global
 		{687171E2-8D8E-4FBA-9CFB-8C33F621DC75}.Release|x64.Build.0 = Release|Any CPU
 		{687171E2-8D8E-4FBA-9CFB-8C33F621DC75}.Release|x86.ActiveCfg = Release|Any CPU
 		{687171E2-8D8E-4FBA-9CFB-8C33F621DC75}.Release|x86.Build.0 = Release|Any CPU
-		{9F0D9DC4-87B1-4765-97A0-82420991C68A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9F0D9DC4-87B1-4765-97A0-82420991C68A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9F0D9DC4-87B1-4765-97A0-82420991C68A}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{9F0D9DC4-87B1-4765-97A0-82420991C68A}.Debug|x64.Build.0 = Debug|Any CPU
-		{9F0D9DC4-87B1-4765-97A0-82420991C68A}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{9F0D9DC4-87B1-4765-97A0-82420991C68A}.Debug|x86.Build.0 = Debug|Any CPU
-		{9F0D9DC4-87B1-4765-97A0-82420991C68A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9F0D9DC4-87B1-4765-97A0-82420991C68A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9F0D9DC4-87B1-4765-97A0-82420991C68A}.Release|x64.ActiveCfg = Release|Any CPU
-		{9F0D9DC4-87B1-4765-97A0-82420991C68A}.Release|x64.Build.0 = Release|Any CPU
-		{9F0D9DC4-87B1-4765-97A0-82420991C68A}.Release|x86.ActiveCfg = Release|Any CPU
-		{9F0D9DC4-87B1-4765-97A0-82420991C68A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
