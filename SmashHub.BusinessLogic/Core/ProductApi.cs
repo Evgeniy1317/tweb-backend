@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SmashHub.Domain;
 
 namespace SmashHub.BusinessLogic.Core
 {
-    internal class ProductApi
+    public abstract class ProductApi
     {
+        public abstract List<Product> GetAll();
+        public abstract Product? GetById(int id);
+        public abstract Product Create(Product product);
+        public abstract Product? Update(int id, Product updated);
+        public abstract bool Delete(int id);
     }
 }
