@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SmashHub.Domain;
 
 namespace SmashHub.BusinessLogic.Interfaces
 {
-    internal class ITournament
+    public interface ITournament
     {
+        List<Tournament> GetAll();
     }
 }

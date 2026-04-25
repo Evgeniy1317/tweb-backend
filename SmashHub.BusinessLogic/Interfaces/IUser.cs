@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SmashHub.Domain;
+using SmashHub.Helpers;
 
 namespace SmashHub.BusinessLogic.Interfaces
 {
-    internal class IUser
+    public interface IUser
     {
+        UserModel UserLogin(UserLoginModel model);
+        UserModel UserRegister(UserRegisterModel model);
+        User? GetById(int id);
+        User? GetByEmail(string email);
+        bool EmailExists(string email);
+        List<User> GetAll();
+        bool Delete(int id);
     }
 }

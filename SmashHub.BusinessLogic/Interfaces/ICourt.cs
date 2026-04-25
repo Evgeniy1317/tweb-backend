@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SmashHub.Domain;
 
 namespace SmashHub.BusinessLogic.Interfaces
 {
-    internal class ICourt
+    public interface ICourt
     {
+        List<Court> GetAll();
     }
 }

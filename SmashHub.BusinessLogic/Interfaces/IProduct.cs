@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SmashHub.Domain;
 
 namespace SmashHub.BusinessLogic.Interfaces
 {
-    internal class IProduct
+    public interface IProduct
     {
+        List<Product> GetAll();
+        Product? GetById(int id);
+        Product Create(Product product);
+        Product? Update(int id, Product updated);
+        bool Delete(int id);
     }
 }
