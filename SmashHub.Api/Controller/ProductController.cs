@@ -1,21 +1,29 @@
 using Microsoft.AspNetCore.Mvc;
+using SmashHub.BusinessLogic;
+using SmashHub.BusinessLogic.Interfaces;
 using SmashHub.Domain;
 
 namespace SmashHub.Api.Controller
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/products")]
     public class ProductController : ControllerBase
     {
-        private static List<Product> _products = new List<Product>();
+        private readonly IProduct _productBL;
+
+        public ProductController()
+        {
+            var bl = new BussinesLogic();
+            _productBL = bl.GetProductBL();
+        }
 
         [HttpGet]
-        public IActionResult GetAll() => Ok(_products);
+        public IActionResult GetAll() => Ok(_productBL.GetAll());
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var product = _products.FirstOrDefault(p => p.Id == id);
+            var product = _productBL.GetById(id);
             if (product == null) return NotFound();
             return Ok(product);
         }
@@ -23,42 +31,24 @@ namespace SmashHub.Api.Controller
         [HttpPost]
         public IActionResult Create(Product product)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            _products.Add(product);
-
-            return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var created = _productBL.Create(product);
+            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, Product updatedProduct)
+        public IActionResult Update(int id, Product updated)
         {
-            var product = _products.FirstOrDefault(p => p.Id == id);
-
-            if (product == null)
-                return NotFound();
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            product.Title = updatedProduct.Title;
-            product.Price = updatedProduct.Price;
-            product.Description = updatedProduct.Description;
-            product.Category = updatedProduct.Category;
-            product.Condition = updatedProduct.Condition;
-            product.Image = updatedProduct.Image;
-
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var product = _productBL.Update(id, updated);
+            if (product == null) return NotFound();
             return Ok(product);
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var product = _products.FirstOrDefault(p => p.Id == id);
-            if (product == null) return NotFound();
-
-            _products.Remove(product);
+            if (!_productBL.Delete(id)) return NotFound();
             return NoContent();
         }
     }

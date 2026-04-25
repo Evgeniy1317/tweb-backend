@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SmashHub.BusinessLogic;
+using SmashHub.BusinessLogic.Interfaces;
 using SmashHub.Domain;
+using SmashHub.Helpers;
 
 namespace SmashHub.Api.Controller
 {
@@ -7,62 +10,47 @@ namespace SmashHub.Api.Controller
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        private static List<User> _users = new List<User>();
+        private readonly IUser _userBL;
+
+        public UserController()
+        {
+            var bl = new BussinesLogic();
+            _userBL = bl.GetUserBL();
+        }
 
         [HttpGet]
-        public IActionResult GetAll() => Ok(_users);
+        public IActionResult GetAll() => Ok(_userBL.GetAll());
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var user = _users.FirstOrDefault(u => u.Id == id);
+            var user = _userBL.GetById(id);
             if (user == null) return NotFound();
             return Ok(user);
         }
 
         [HttpPost]
-        public IActionResult Create(User user)
+        public IActionResult Create(UserRegisterModel model)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            if (_users.Any(u => u.Email == user.Email))
-                return BadRequest("Email already exists");
-
-            _users.Add(user);
-
-            return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (_userBL.EmailExists(model.Email)) return BadRequest("Email already exists");
+            var created = _userBL.UserRegister(model);
+            return Ok(created);
         }
 
         [HttpPut("{id}")]
         public IActionResult Update(int id, User updated)
         {
-            var user = _users.FirstOrDefault(u => u.Id == id);
-
-            if (user == null)
-                return NotFound();
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            if (_users.Any(u => u.Email == updated.Email && u.Id != id))
-                return BadRequest("Email already taken by another user");
-
-            user.Name = updated.Name;
-            user.Email = updated.Email;
-            user.Phone = updated.Phone;
-            user.Avatar = updated.Avatar;
-
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var user = _userBL.GetById(id);
+            if (user == null) return NotFound();
             return Ok(user);
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var user = _users.FirstOrDefault(u => u.Id == id);
-            if (user == null) return NotFound();
-
-            _users.Remove(user);
+            if (!_userBL.Delete(id)) return NotFound();
             return NoContent();
         }
     }
