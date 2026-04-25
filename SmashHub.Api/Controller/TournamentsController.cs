@@ -5,11 +5,9 @@ namespace SmashHub.Api.Controller
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CourtsController : ControllerBase
+    public class TournamentsController : ControllerBase
     {
-        public CourtsController() { }
-
         [HttpGet]
-        public IActionResult GetAll() => Ok(new BussinesLogic().GetCourtBL().GetAll());
+        public IActionResult GetAll() => Ok(new BussinesLogic().GetTournamentBL().GetAll());
     }
 }

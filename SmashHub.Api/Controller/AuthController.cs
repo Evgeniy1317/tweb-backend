@@ -1,17 +1,45 @@
-using System.Runtime.InteropServices;
+using Microsoft.AspNetCore.Mvc;
+using SmashHub.BusinessLogic;
+using SmashHub.BusinessLogic.Interfaces;
+using SmashHub.Helpers;
 
-// In SDK-style projects such as this one, several assembly attributes that were historically
-// defined in this file are now automatically added during build and populated with
-// values defined in project properties. For details of which attributes are included
-// and how to customise this process see: https://aka.ms/assembly-info-properties
+namespace SmashHub.Api.Controller
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class AuthController : ControllerBase
+    {
+        private readonly IUser _userBL;
 
+        public AuthController()
+        {
+            var bl = new BussinesLogic();
+            _userBL = bl.GetUserBL();
+        }
 
-// Setting ComVisible to false makes the types in this assembly not visible to COM
-// components.  If you need to access a type in this assembly from COM, set the ComVisible
-// attribute to true on that type.
+        [HttpPost("register")]
+        public IActionResult Register(UserRegisterModel model)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (_userBL.EmailExists(model.Email)) return BadRequest("Email already exists");
+            var created = _userBL.UserRegister(model);
+            return Ok(created);
+        }
 
-[assembly: ComVisible(false)]
+        [HttpPost("login")]
+        public IActionResult Login(UserLoginModel model)
+        {
+            var user = _userBL.UserLogin(model);
+            if (user.Id == 0) return Unauthorized("Invalid credentials");
+            return Ok(user);
+        }
 
-// The following GUID is for the ID of the typelib if this project is exposed to COM.
-
-[assembly: Guid("892783e6-d440-4b4c-9636-52139e4ea923")]
+        [HttpGet("profile")]
+        public IActionResult Profile([FromQuery] int userId)
+        {
+            var user = _userBL.GetById(userId);
+            if (user == null) return NotFound();
+            return Ok(user);
+        }
+    }
+}
