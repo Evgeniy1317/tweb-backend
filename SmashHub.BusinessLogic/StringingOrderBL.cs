@@ -1,29 +1,36 @@
-﻿using SmashHub.BusinessLogic.Core;
+﻿using Microsoft.EntityFrameworkCore;
 using SmashHub.BusinessLogic.Interfaces;
 using SmashHub.Domain;
 
 namespace SmashHub.BusinessLogic
 {
-    public class StringingOrderBL : StringingOrderApi, IStringingOrder
+    public class StringingOrderBL : IStringingOrder
     {
-        private static List<StringingOrder> _orders = new();
+        private readonly SmashHubContext _db;
 
-        public override List<StringingOrder> GetAll() => _orders;
-
-        public override StringingOrder Create(StringingOrder order)
+        public StringingOrderBL(SmashHubContext db)
         {
-            order.Id = _orders.Count > 0 ? _orders.Max(o => o.Id) + 1 : 1;
+            _db = db;
+        }
+
+        public List<StringingOrder> GetAll() => _db.StringingOrders.Include(o => o.Client).ToList();
+
+        public StringingOrder Create(StringingOrder order)
+        {
             order.Status = "handover";
             order.CreatedAt = DateTime.UtcNow.ToString("yyyy-MM-dd");
-            _orders.Add(order);
+            _db.StringingOrders.Add(order);
+            _db.SaveChanges();
             return order;
         }
 
-        public override StringingOrder? UpdateStatus(int id, string status)
+        public StringingOrder? UpdateStatus(int id, string status)
         {
-            var order = _orders.FirstOrDefault(o => o.Id == id);
+            var order = _db.StringingOrders.FirstOrDefault(o => o.Id == id);
             if (order == null) return null;
+
             order.Status = status;
+            _db.SaveChanges();
             return order;
         }
     }

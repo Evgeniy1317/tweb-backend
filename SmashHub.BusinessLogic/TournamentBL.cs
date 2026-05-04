@@ -1,20 +1,51 @@
-﻿using SmashHub.BusinessLogic.Core;
-using SmashHub.BusinessLogic.Interfaces;
+﻿using SmashHub.BusinessLogic.Interfaces;
 using SmashHub.Domain;
 
 namespace SmashHub.BusinessLogic
 {
-    public class TournamentBL : TournamentApi, ITournament
+    public class TournamentBL : ITournament
     {
-        private static List<Tournament> _tournaments = new()
-        {
-            new Tournament { Id = 1, Title = "Кубок Кишинёва 2026", Date = "2026-04-15", Location = "Arena Badminton Club", Level = "Все уровни", Description = "Ежегодный открытый турнир", ExternalUrl = "https://example.com/1" },
-            new Tournament { Id = 2, Title = "Spring Smash Open", Date = "2026-05-03", Location = "SmashZone Chișinău", Level = "Средний / Продвинутый", Description = "Весенний турнир", ExternalUrl = "https://example.com/2" },
-            new Tournament { Id = 3, Title = "Новичок Challenge", Date = "2026-05-20", Location = "SportLife Center", Level = "Начинающий", Description = "Турнир для начинающих", ExternalUrl = "https://example.com/3" },
-            new Tournament { Id = 4, Title = "Moldova National Championship", Date = "2026-06-10", Location = "Badminton Pro Hall", Level = "Профессиональный", Description = "Чемпионат Молдовы", ExternalUrl = "https://example.com/4" },
-            new Tournament { Id = 5, Title = "Summer Doubles League", Date = "2026-07-01", Location = "Arena Badminton Club", Level = "Все уровни", Description = "Летняя парная лига", ExternalUrl = "https://example.com/5" },
-        };
+        private readonly SmashHubContext _db;
 
-        public override List<Tournament> GetAll() => _tournaments;
+        public TournamentBL(SmashHubContext db)
+        {
+            _db = db;
+        }
+
+        public List<Tournament> GetAll() => _db.Tournaments.ToList();
+
+        public Tournament? GetById(int id) => _db.Tournaments.FirstOrDefault(t => t.Id == id);
+
+        public Tournament Create(Tournament tournament)
+        {
+            _db.Tournaments.Add(tournament);
+            _db.SaveChanges();
+            return tournament;
+        }
+
+        public Tournament? Update(int id, Tournament updated)
+        {
+            var tournament = GetById(id);
+            if (tournament == null) return null;
+
+            tournament.Title = updated.Title;
+            tournament.Date = updated.Date;
+            tournament.Location = updated.Location;
+            tournament.Level = updated.Level;
+            tournament.Description = updated.Description;
+            tournament.ExternalUrl = updated.ExternalUrl;
+
+            _db.SaveChanges();
+            return tournament;
+        }
+
+        public bool Delete(int id)
+        {
+            var tournament = GetById(id);
+            if (tournament == null) return false;
+            _db.Tournaments.Remove(tournament);
+            _db.SaveChanges();
+            return true;
+        }
     }
 }

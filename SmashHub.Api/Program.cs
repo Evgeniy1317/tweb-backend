@@ -1,3 +1,7 @@
+﻿using Microsoft.EntityFrameworkCore;
+using SmashHub.BusinessLogic;
+using SmashHub.BusinessLogic.Interfaces;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
@@ -10,6 +14,15 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader()
               .AllowAnyMethod());
 });
+
+builder.Services.AddDbContext<SmashHubContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+
+builder.Services.AddScoped<IUser, UserBL>();
+builder.Services.AddScoped<IProduct, ProductBL>();
+builder.Services.AddScoped<ICourt, CourtBL>();
+builder.Services.AddScoped<ITournament, TournamentBL>();
+builder.Services.AddScoped<IStringingOrder, StringingOrderBL>();
 
 var app = builder.Build();
 
