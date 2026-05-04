@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using SmashHub.BusinessLogic;
 using SmashHub.BusinessLogic.Interfaces;
 using SmashHub.Helpers;
 
@@ -11,10 +10,9 @@ namespace SmashHub.Api.Controller
     {
         private readonly IUser _userBL;
 
-        public AuthController()
+        public AuthController(IUser userBL)
         {
-            var bl = new BussinesLogic();
-            _userBL = bl.GetUserBL();
+            _userBL = userBL;
         }
 
         [HttpPost("register")]

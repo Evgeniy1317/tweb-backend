@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using SmashHub.BusinessLogic;
 using SmashHub.BusinessLogic.Interfaces;
 using SmashHub.Domain;
 
@@ -9,35 +8,30 @@ namespace SmashHub.Api.Controller
     [Route("api/[controller]")]
     public class StringingController : ControllerBase
     {
-        private readonly IStringingOrder _orderBL;
+        private readonly IStringingOrder _stringingBL;
 
-        public StringingController()
+        public StringingController(IStringingOrder stringingBL)
         {
-            var bl = new BussinesLogic();
-            _orderBL = bl.GetStringingOrderBL();
+            _stringingBL = stringingBL;
         }
 
         [HttpGet]
-        public IActionResult GetAll() => Ok(_orderBL.GetAll());
+        public IActionResult GetAll() => Ok(_stringingBL.GetAll());
 
         [HttpPost]
         public IActionResult Create(StringingOrder order)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            return Ok(_orderBL.Create(order));
+            var created = _stringingBL.Create(order);
+            return Ok(created);
         }
 
-        [HttpPatch("{id}")]
-        public IActionResult UpdateStatus(int id, [FromBody] StatusUpdateRequest request)
+        [HttpPut("{id}")]
+        public IActionResult UpdateStatus(int id, [FromBody] string status)
         {
-            var order = _orderBL.UpdateStatus(id, request.Status);
+            var order = _stringingBL.UpdateStatus(id, status);
             if (order == null) return NotFound();
             return Ok(order);
         }
-    }
-
-    public class StatusUpdateRequest
-    {
-        public string Status { get; set; } = string.Empty;
     }
 }

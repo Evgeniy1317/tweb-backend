@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using SmashHub.BusinessLogic;
 using SmashHub.BusinessLogic.Interfaces;
 using SmashHub.Domain;
 
@@ -11,10 +10,9 @@ namespace SmashHub.Api.Controller
     {
         private readonly IProduct _productBL;
 
-        public ProductController()
+        public ProductController(IProduct productBL)
         {
-            var bl = new BussinesLogic();
-            _productBL = bl.GetProductBL();
+            _productBL = productBL;
         }
 
         [HttpGet]
