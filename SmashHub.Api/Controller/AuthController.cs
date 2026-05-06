@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SmashHub.BusinessLogic.Interfaces;
-using SmashHub.Helpers;
+using SmashHub.Domain.Models.User;
 
 namespace SmashHub.Api.Controller
 {

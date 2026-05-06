@@ -1,4 +1,4 @@
-﻿namespace SmashHub.Helpers
+namespace SmashHub.Domain.Models.User
 {
     public class UserRegisterModel
     {

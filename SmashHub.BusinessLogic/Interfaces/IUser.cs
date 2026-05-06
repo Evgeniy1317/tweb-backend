@@ -1,5 +1,5 @@
-﻿using SmashHub.Domain;
-using SmashHub.Helpers;
+using SmashHub.Domain;
+using SmashHub.Domain.Models.User;
 
 namespace SmashHub.BusinessLogic.Interfaces
 {

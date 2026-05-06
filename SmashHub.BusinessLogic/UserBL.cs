@@ -1,6 +1,7 @@
-﻿using SmashHub.BusinessLogic.Interfaces;
+using SmashHub.BusinessLogic.Interfaces;
+using SmashHub.DataAccess;
 using SmashHub.Domain;
-using SmashHub.Helpers;
+using SmashHub.Domain.Models.User;
 
 namespace SmashHub.BusinessLogic
 {

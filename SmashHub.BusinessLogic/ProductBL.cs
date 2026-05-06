@@ -1,4 +1,5 @@
-﻿using SmashHub.BusinessLogic.Interfaces;
+using SmashHub.BusinessLogic.Interfaces;
+using SmashHub.DataAccess;
 using SmashHub.Domain;
 
 namespace SmashHub.BusinessLogic

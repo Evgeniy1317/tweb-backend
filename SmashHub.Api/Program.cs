@@ -1,5 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SmashHub.BusinessLogic;
+using SmashHub.DataAccess;
 using SmashHub.BusinessLogic.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,8 +21,6 @@ builder.Services.AddDbContext<SmashHubContext>(options =>
 
 builder.Services.AddScoped<IUser, UserBL>();
 builder.Services.AddScoped<IProduct, ProductBL>();
-builder.Services.AddScoped<ICourt, CourtBL>();
-builder.Services.AddScoped<ITournament, TournamentBL>();
 builder.Services.AddScoped<IStringingOrder, StringingOrderBL>();
 
 var app = builder.Build();
