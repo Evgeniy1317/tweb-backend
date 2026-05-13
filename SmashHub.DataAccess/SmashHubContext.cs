@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmashHub.Domain;
 
-namespace SmashHub.BusinessLogic
+namespace SmashHub.DataAccess
 {
     public class SmashHubContext : DbContext
     {
@@ -9,8 +9,7 @@ namespace SmashHub.BusinessLogic
 
         public DbSet<Product> Products { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<Court> Courts { get; set; }
-        public DbSet<Tournament> Tournaments { get; set; }
+        public DbSet<UserContact> UserContacts { get; set; }
         public DbSet<StringingOrder> StringingOrders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -23,6 +22,12 @@ namespace SmashHub.BusinessLogic
                 .WithMany()
                 .HasForeignKey(o => o.ClientUserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<UserContact>()
+                .HasOne(c => c.User)
+                .WithMany(u => u.Contacts)
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

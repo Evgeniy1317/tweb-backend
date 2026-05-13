@@ -1,5 +1,5 @@
-﻿using SmashHub.Domain;
-using SmashHub.Helpers;
+using SmashHub.Domain;
+using SmashHub.Domain.Models.User;
 
 namespace SmashHub.BusinessLogic.Interfaces
 {
@@ -7,6 +7,8 @@ namespace SmashHub.BusinessLogic.Interfaces
     {
         UserModel UserLogin(UserLoginModel model);
         UserModel UserRegister(UserRegisterModel model);
+        UserModel? GetProfile(int userId);
+        UserModel? UpdateProfile(int userId, UserProfileUpdateModel model);
         User? GetById(int id);
         User? GetByEmail(string email);
         bool EmailExists(string email);
