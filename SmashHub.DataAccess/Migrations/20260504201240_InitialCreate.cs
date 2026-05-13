@@ -41,12 +41,31 @@ namespace SmashHub.DataAccess.Migrations
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Avatar = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                });
+            migrationBuilder.CreateTable(
+                name: "UserContacts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Platform = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserContacts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserContacts_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -79,6 +98,10 @@ namespace SmashHub.DataAccess.Migrations
                 name: "IX_StringingOrders_ClientUserId",
                 table: "StringingOrders",
                 column: "ClientUserId");
+            migrationBuilder.CreateIndex(
+                name: "IX_UserContacts_UserId",
+                table: "UserContacts",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -89,6 +112,8 @@ namespace SmashHub.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "StringingOrders");
+            migrationBuilder.DropTable(
+                name: "UserContacts");
 
             migrationBuilder.DropTable(
                 name: "Users");

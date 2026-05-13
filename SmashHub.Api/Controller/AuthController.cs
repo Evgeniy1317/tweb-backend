@@ -1,4 +1,7 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SmashHub.Api.Services;
 using SmashHub.BusinessLogic.Interfaces;
 using SmashHub.Domain.Models.User;
 
@@ -9,13 +12,16 @@ namespace SmashHub.Api.Controller
     public class AuthController : ControllerBase
     {
         private readonly IUser _userBL;
+        private readonly JwtTokenService _jwtTokenService;
 
-        public AuthController(IUser userBL)
+        public AuthController(IUser userBL, JwtTokenService jwtTokenService)
         {
             _userBL = userBL;
+            _jwtTokenService = jwtTokenService;
         }
 
         [HttpPost("register")]
+        [AllowAnonymous]
         public IActionResult Register(UserRegisterModel model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -25,19 +31,49 @@ namespace SmashHub.Api.Controller
         }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public IActionResult Login(UserLoginModel model)
         {
             var user = _userBL.UserLogin(model);
             if (user.Id == 0) return Unauthorized("Invalid credentials");
-            return Ok(user);
+            var token = _jwtTokenService.GenerateToken(user);
+            return Ok(new AuthResponseModel
+            {
+                Token = token,
+                User = user
+            });
         }
 
         [HttpGet("profile")]
-        public IActionResult Profile([FromQuery] int userId)
+        [Authorize]
+        public IActionResult Profile()
         {
-            var user = _userBL.GetById(userId);
+            var userId = GetCurrentUserId();
+            if (userId == null) return Unauthorized();
+
+            var user = _userBL.GetProfile(userId.Value);
             if (user == null) return NotFound();
             return Ok(user);
+        }
+
+        [HttpPatch("profile")]
+        [Authorize]
+        public IActionResult UpdateProfile(UserProfileUpdateModel model)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var userId = GetCurrentUserId();
+            if (userId == null) return Unauthorized();
+
+            var updated = _userBL.UpdateProfile(userId.Value, model);
+            if (updated == null) return NotFound();
+            return Ok(updated);
+        }
+
+        private int? GetCurrentUserId()
+        {
+            var rawId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.TryParse(rawId, out var userId) ? userId : null;
         }
     }
 }
