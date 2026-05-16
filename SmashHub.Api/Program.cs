@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+using SmashHub.Api.Data;
 using SmashHub.BusinessLogic;
 using SmashHub.DataAccess;
 using SmashHub.BusinessLogic.Interfaces;
@@ -33,7 +34,9 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("FrontendPolicy", policy =>
-        policy.WithOrigins("http://localhost:5173")
+        policy.WithOrigins(
+                  "http://localhost:5173",
+                  "http://localhost:5174")
               .AllowAnyHeader()
               .AllowAnyMethod());
 });
@@ -67,6 +70,8 @@ builder.Services.AddScoped<IStringingOrder, StringingOrderBL>();
 builder.Services.AddScoped<JwtTokenService>();
 
 var app = builder.Build();
+
+AppDbSeeder.Seed(app.Services);
 
 if (app.Environment.IsDevelopment())
 {
