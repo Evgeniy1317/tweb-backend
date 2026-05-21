@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmashHub.Api.Domain;
 
@@ -21,6 +22,7 @@ namespace SmashHub.Api.Controller
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create(Product product)
         {
             if (!ModelState.IsValid)
@@ -32,7 +34,12 @@ namespace SmashHub.Api.Controller
         }
 
         [HttpPut("{id}")]
+<<<<<<< Updated upstream
         public IActionResult Update(int id, Product updatedProduct)
+=======
+        [Authorize(Roles = "Admin")]
+        public IActionResult Update(int id, Product updated)
+>>>>>>> Stashed changes
         {
             var product = _products.FirstOrDefault(p => p.Id == id);
 
@@ -53,6 +60,7 @@ namespace SmashHub.Api.Controller
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(int id)
         {
             var product = _products.FirstOrDefault(p => p.Id == id);
