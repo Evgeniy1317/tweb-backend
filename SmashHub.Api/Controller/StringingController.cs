@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmashHub.BusinessLogic.Interfaces;
 using SmashHub.Domain;
@@ -16,9 +17,11 @@ namespace SmashHub.Api.Controller
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Manager")]
         public IActionResult GetAll() => Ok(_stringingBL.GetAll());
 
         [HttpPost]
+        [Authorize]
         public IActionResult Create(StringingOrder order)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -27,6 +30,7 @@ namespace SmashHub.Api.Controller
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Manager")]
         public IActionResult UpdateStatus(int id, [FromBody] string status)
         {
             var order = _stringingBL.UpdateStatus(id, status);
