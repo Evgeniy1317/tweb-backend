@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmashHub.BusinessLogic.Interfaces;
 using SmashHub.Domain;
@@ -27,6 +28,7 @@ namespace SmashHub.Api.Controller
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create(Product product)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -35,7 +37,9 @@ namespace SmashHub.Api.Controller
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Update(int id, Product updated)
+
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var product = _productBL.Update(id, updated);
@@ -44,6 +48,7 @@ namespace SmashHub.Api.Controller
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(int id)
         {
             if (!_productBL.Delete(id)) return NotFound();
