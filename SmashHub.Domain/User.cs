@@ -1,7 +1,14 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace SmashHub.Api.Domain
+namespace SmashHub.Domain
 {
+    public enum UserRole
+    {
+        User = 1,
+        Manager = 20,
+        Admin = 30
+    }
+
     public class User
     {
         public int Id { get; set; }
@@ -15,11 +22,12 @@ namespace SmashHub.Api.Domain
         public string Email { get; set; } = string.Empty;
 
         [Required]
-        [MinLength(6)]
-        public string Password { get; set; } = string.Empty;
+        public string PasswordHash { get; set; } = string.Empty;
+
+        public UserRole Role { get; set; } = UserRole.User;
 
         public string Phone { get; set; } = string.Empty;
 
-        public string Avatar { get; set; } = string.Empty;
+        public List<UserContact> Contacts { get; set; } = new();
     }
 }

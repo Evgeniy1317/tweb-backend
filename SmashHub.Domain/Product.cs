@@ -1,6 +1,6 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace SmashHub.Api.Domain
+namespace SmashHub.Domain
 {
     public class Product
     {
@@ -25,5 +25,10 @@ namespace SmashHub.Api.Domain
 
         [Required]
         public string Image { get; set; } = string.Empty;
+
+        public string? SizeLabel { get; set; }
+        public string? ColorLabel { get; set; }
+        public string? Fit { get; set; }
+        public string? SellerPhone { get; set; }
     }
 }
