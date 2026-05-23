@@ -17,6 +17,14 @@ namespace SmashHub.BusinessLogic
 
         public List<StringingOrder> GetAll() => _db.StringingOrders.Include(o => o.Client).ToList();
 
+        public List<StringingOrder> GetByUserId(int userId)
+        {
+            return _db.StringingOrders
+                .Include(o => o.Client)
+                .Where(o => o.ClientUserId == userId)
+                .ToList();
+        }
+
         public StringingOrder? Create(StringingOrderCreateModel model, int userId)
         {
             var user = _db.Users.FirstOrDefault(u => u.Id == userId);

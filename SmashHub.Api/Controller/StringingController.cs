@@ -10,6 +10,15 @@ namespace SmashHub.Api.Controller
     [Route("api/[controller]")]
     public class StringingController : ControllerBase
     {
+        private static readonly HashSet<string> AllowedStatuses = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "handover",
+            "inProgress",
+            "ready",
+            "done",
+            "cancelled"
+        };
+
         private readonly IStringingOrder _stringingBL;
 
         public StringingController(IStringingOrder stringingBL)
@@ -20,6 +29,16 @@ namespace SmashHub.Api.Controller
         [HttpGet]
         [Authorize(Roles = "Admin,Manager")]
         public IActionResult GetAll() => Ok(_stringingBL.GetAll());
+
+        [HttpGet("my")]
+        [Authorize]
+        public IActionResult GetMyOrders()
+        {
+            var userId = GetCurrentUserId();
+            if (userId == null) return Unauthorized();
+
+            return Ok(_stringingBL.GetByUserId(userId.Value));
+        }
 
         [HttpPost]
         [Authorize]
@@ -38,9 +57,15 @@ namespace SmashHub.Api.Controller
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin,Manager")]
-        public IActionResult UpdateStatus(int id, [FromBody] string status)
+        public IActionResult UpdateStatus(int id, StringingOrderStatusUpdateModel model)
         {
-            var order = _stringingBL.UpdateStatus(id, status);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!AllowedStatuses.Contains(model.Status))
+            {
+                return BadRequest($"Invalid status. Allowed statuses: {string.Join(", ", AllowedStatuses)}");
+            }
+
+            var order = _stringingBL.UpdateStatus(id, model.Status);
             if (order == null) return NotFound();
             return Ok(order);
         }
