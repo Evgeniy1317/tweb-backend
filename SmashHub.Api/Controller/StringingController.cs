@@ -1,7 +1,8 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmashHub.BusinessLogic.Interfaces;
-using SmashHub.Domain;
+using SmashHub.Domain.Models.Stringing;
 
 namespace SmashHub.Api.Controller
 {
@@ -22,10 +23,16 @@ namespace SmashHub.Api.Controller
 
         [HttpPost]
         [Authorize]
-        public IActionResult Create(StringingOrder order)
+        public IActionResult Create(StringingOrderCreateModel model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var created = _stringingBL.Create(order);
+
+            var userId = GetCurrentUserId();
+            if (userId == null) return Unauthorized();
+
+            var created = _stringingBL.Create(model, userId.Value);
+            if (created == null) return NotFound("User not found");
+
             return Ok(created);
         }
 
@@ -36,6 +43,12 @@ namespace SmashHub.Api.Controller
             var order = _stringingBL.UpdateStatus(id, status);
             if (order == null) return NotFound();
             return Ok(order);
+        }
+
+        private int? GetCurrentUserId()
+        {
+            var rawId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.TryParse(rawId, out var userId) ? userId : null;
         }
     }
 }
