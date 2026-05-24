@@ -13,9 +13,8 @@ namespace SmashHub.Api.Controller
         private static readonly HashSet<string> AllowedStatuses = new(StringComparer.OrdinalIgnoreCase)
         {
             "handover",
-            "inProgress",
+            "in_progress",
             "ready",
-            "done",
             "cancelled"
         };
 
@@ -57,15 +56,19 @@ namespace SmashHub.Api.Controller
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin,Manager")]
-        public IActionResult UpdateStatus(int id, StringingOrderStatusUpdateModel model)
+        public IActionResult UpdateStatus(int id, [FromBody] string status)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            if (!AllowedStatuses.Contains(model.Status))
+            if (string.IsNullOrWhiteSpace(status))
+            {
+                return BadRequest("Status is required.");
+            }
+
+            if (!AllowedStatuses.Contains(status))
             {
                 return BadRequest($"Invalid status. Allowed statuses: {string.Join(", ", AllowedStatuses)}");
             }
 
-            var order = _stringingBL.UpdateStatus(id, model.Status);
+            var order = _stringingBL.UpdateStatus(id, status);
             if (order == null) return NotFound();
             return Ok(order);
         }
