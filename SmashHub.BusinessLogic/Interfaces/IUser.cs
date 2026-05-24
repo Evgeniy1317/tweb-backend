@@ -12,6 +12,7 @@ namespace SmashHub.BusinessLogic.Interfaces
         User? GetById(int id);
         User? GetByEmail(string email);
         bool EmailExists(string email);
+        bool EmailExistsForOtherUser(int userId, string email);
         List<User> GetAll();
         bool Delete(int id);
     }

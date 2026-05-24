@@ -73,7 +73,12 @@ namespace SmashHub.BusinessLogic
             if (user == null) return null;
 
             if (!string.IsNullOrWhiteSpace(model.Name)) user.Name = model.Name.Trim();
-            if (!string.IsNullOrWhiteSpace(model.Email)) user.Email = model.Email.Trim();
+            if (!string.IsNullOrWhiteSpace(model.Email))
+            {
+                var email = model.Email.Trim();
+                if (EmailExistsForOtherUser(userId, email)) return null;
+                user.Email = email;
+            }
             if (model.Phone != null) user.Phone = model.Phone.Trim();
 
             if (model.Contacts != null)
@@ -100,7 +105,17 @@ namespace SmashHub.BusinessLogic
 
         public User? GetByEmail(string email) => _db.Users.FirstOrDefault(u => u.Email == email);
 
-        public bool EmailExists(string email) => _db.Users.Any(u => u.Email == email);
+        public bool EmailExists(string email)
+        {
+            var normalizedEmail = email.Trim();
+            return _db.Users.Any(u => u.Email == normalizedEmail);
+        }
+
+        public bool EmailExistsForOtherUser(int userId, string email)
+        {
+            var normalizedEmail = email.Trim();
+            return _db.Users.Any(u => u.Id != userId && u.Email == normalizedEmail);
+        }
 
         public bool Delete(int id)
         {
