@@ -16,6 +16,10 @@ namespace SmashHub.DataAccess
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
+
             // N:1 — StringingOrder -> User
             modelBuilder.Entity<StringingOrder>()
                 .HasOne(o => o.Client)

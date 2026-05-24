@@ -65,6 +65,12 @@ namespace SmashHub.Api.Controller
             var userId = GetCurrentUserId();
             if (userId == null) return Unauthorized();
 
+            if (!string.IsNullOrWhiteSpace(model.Email) &&
+                _userBL.EmailExistsForOtherUser(userId.Value, model.Email))
+            {
+                return BadRequest("Email already exists");
+            }
+
             var updated = _userBL.UpdateProfile(userId.Value, model);
             if (updated == null) return NotFound();
             return Ok(updated);

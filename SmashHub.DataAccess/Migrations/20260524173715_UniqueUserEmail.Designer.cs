@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmashHub.DataAccess;
 
@@ -10,9 +11,11 @@ using SmashHub.DataAccess;
 namespace SmashHub.DataAccess.Migrations
 {
     [DbContext(typeof(SmashHubContext))]
-    partial class SmashHubContextModelSnapshot : ModelSnapshot
+    [Migration("20260524173715_UniqueUserEmail")]
+    partial class UniqueUserEmail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

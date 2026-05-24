@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using SmashHub.BusinessLogic.Interfaces;
 using SmashHub.DataAccess;
 using SmashHub.Domain;
+using SmashHub.Domain.Models.Stringing;
 
 namespace SmashHub.BusinessLogic
 {
@@ -16,10 +17,31 @@ namespace SmashHub.BusinessLogic
 
         public List<StringingOrder> GetAll() => _db.StringingOrders.Include(o => o.Client).ToList();
 
-        public StringingOrder Create(StringingOrder order)
+        public List<StringingOrder> GetByUserId(int userId)
         {
-            order.Status = "handover";
-            order.CreatedAt = DateTime.UtcNow.ToString("yyyy-MM-dd");
+            return _db.StringingOrders
+                .Include(o => o.Client)
+                .Where(o => o.ClientUserId == userId)
+                .ToList();
+        }
+
+        public StringingOrder? Create(StringingOrderCreateModel model, int userId)
+        {
+            var user = _db.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null) return null;
+
+            var order = new StringingOrder
+            {
+                RacketModel = model.RacketModel,
+                Tension = model.Tension,
+                StringType = model.StringType,
+                TotalLei = model.TotalLei,
+                ClientUserId = user.Id,
+                ClientName = user.Name,
+                Status = "handover",
+                CreatedAt = DateTime.UtcNow.ToString("yyyy-MM-dd")
+            };
+
             _db.StringingOrders.Add(order);
             _db.SaveChanges();
             return order;
