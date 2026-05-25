@@ -1,13 +1,13 @@
-﻿using SmashHub.Domain;
+using SmashHub.Domain.Models.Product;
 
 namespace SmashHub.BusinessLogic.Interfaces
 {
     public interface IProduct
     {
-        List<Product> GetAll();
-        Product? GetById(int id);
-        Product Create(Product product);
-        Product? Update(int id, Product updated);
+        List<ProductModel> GetAll();
+        ProductModel? GetById(int id);
+        ProductModel Create(ProductCreateModel model);
+        ProductModel? Update(int id, ProductUpdateModel model);
         bool Delete(int id);
     }
 }
