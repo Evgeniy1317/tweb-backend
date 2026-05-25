@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmashHub.BusinessLogic.Interfaces;
-using SmashHub.Domain;
+using SmashHub.Domain.Models.Product;
 
 namespace SmashHub.Api.Controller
 {
@@ -29,7 +29,7 @@ namespace SmashHub.Api.Controller
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public IActionResult Create(Product product)
+        public IActionResult Create(ProductCreateModel product)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var created = _productBL.Create(product);
@@ -38,8 +38,7 @@ namespace SmashHub.Api.Controller
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
-        public IActionResult Update(int id, Product updated)
-
+        public IActionResult Update(int id, ProductUpdateModel updated)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var product = _productBL.Update(id, updated);
