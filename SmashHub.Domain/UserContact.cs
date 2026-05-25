@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace SmashHub.Domain
 {
@@ -16,6 +17,7 @@ namespace SmashHub.Domain
         [StringLength(200)]
         public string Value { get; set; } = string.Empty;
 
+        [JsonIgnore]
         public User? User { get; set; }
     }
 }

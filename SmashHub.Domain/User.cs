@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace SmashHub.Domain
 {
@@ -29,5 +30,8 @@ namespace SmashHub.Domain
         public string Phone { get; set; } = string.Empty;
 
         public List<UserContact> Contacts { get; set; } = new();
+
+        [JsonIgnore]
+        public List<StringingOrder> StringingOrders { get; set; } = new();
     }
 }

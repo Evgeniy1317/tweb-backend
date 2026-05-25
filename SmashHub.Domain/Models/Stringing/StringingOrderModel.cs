@@ -1,29 +1,14 @@
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
-
-namespace SmashHub.Domain
+namespace SmashHub.Domain.Models.Stringing
 {
-    public class StringingOrder
+    public class StringingOrderModel
     {
         public int Id { get; set; }
-
-        [Required]
         public string RacketModel { get; set; } = string.Empty;
-
-        [Required]
         public string Tension { get; set; } = string.Empty;
-
-        [Required]
         public string StringType { get; set; } = string.Empty;
-
-        public string Status { get; set; } = "handover";
+        public string Status { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
-
         public int ClientUserId { get; set; }
-
-        [JsonIgnore]
-        public User? Client { get; set; }
-
         public string ClientName { get; set; } = string.Empty;
         public decimal TotalLei { get; set; }
     }

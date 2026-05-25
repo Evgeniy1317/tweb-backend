@@ -20,10 +20,18 @@ namespace SmashHub.DataAccess
                 .HasIndex(u => u.Email)
                 .IsUnique();
 
+            modelBuilder.Entity<Product>()
+                .Property(p => p.Price)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<StringingOrder>()
+                .Property(o => o.TotalLei)
+                .HasPrecision(18, 2);
+
             // N:1 — StringingOrder -> User
             modelBuilder.Entity<StringingOrder>()
                 .HasOne(o => o.Client)
-                .WithMany()
+                .WithMany(u => u.StringingOrders)
                 .HasForeignKey(o => o.ClientUserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
