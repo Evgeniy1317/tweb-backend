@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmashHub.DataAccess;
 
@@ -11,9 +12,11 @@ using SmashHub.DataAccess;
 namespace SmashHub.DataAccess.Migrations
 {
     [DbContext(typeof(SmashHubContext))]
-    partial class SmashHubContextModelSnapshot : ModelSnapshot
+    [Migration("20260526132219_ProductOwnership")]
+    partial class ProductOwnership
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,59 +79,6 @@ namespace SmashHub.DataAccess.Migrations
                     b.HasIndex("OwnerId");
 
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("SmashHub.Domain.ProductImage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SortOrder")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ProductImages");
-                });
-
-            modelBuilder.Entity("SmashHub.Domain.ProductSellerContact", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Platform")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ProductSellerContacts");
                 });
 
             modelBuilder.Entity("SmashHub.Domain.StringingOrder", b =>
@@ -250,28 +200,6 @@ namespace SmashHub.DataAccess.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("SmashHub.Domain.ProductImage", b =>
-                {
-                    b.HasOne("SmashHub.Domain.Product", "Product")
-                        .WithMany("ExtraImages")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("SmashHub.Domain.ProductSellerContact", b =>
-                {
-                    b.HasOne("SmashHub.Domain.Product", "Product")
-                        .WithMany("SellerContacts")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("SmashHub.Domain.StringingOrder", b =>
                 {
                     b.HasOne("SmashHub.Domain.User", "Client")
@@ -292,13 +220,6 @@ namespace SmashHub.DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("SmashHub.Domain.Product", b =>
-                {
-                    b.Navigation("ExtraImages");
-
-                    b.Navigation("SellerContacts");
                 });
 
             modelBuilder.Entity("SmashHub.Domain.User", b =>

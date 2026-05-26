@@ -6,7 +6,7 @@ namespace SmashHub.BusinessLogic.Interfaces
     {
         List<ProductModel> GetAll();
         ProductModel? GetById(int id);
-        ProductModel Create(ProductCreateModel model);
+        ProductModel Create(ProductCreateModel model, int ownerId);
         ProductModel? Update(int id, ProductUpdateModel model);
         bool Delete(int id);
     }
