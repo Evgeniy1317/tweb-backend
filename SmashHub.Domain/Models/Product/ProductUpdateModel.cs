@@ -28,5 +28,7 @@ namespace SmashHub.Domain.Models.Product
         public string? ColorLabel { get; set; }
         public string? Fit { get; set; }
         public string? SellerPhone { get; set; }
+        public List<string>? ExtraImages { get; set; }
+        public List<SellerContactSnapshotModel>? SellerContacts { get; set; }
     }
 }

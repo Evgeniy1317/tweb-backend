@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace SmashHub.Domain
 {
@@ -30,5 +31,14 @@ namespace SmashHub.Domain
         public string? ColorLabel { get; set; }
         public string? Fit { get; set; }
         public string? SellerPhone { get; set; }
+
+        public int? OwnerId { get; set; }
+
+        [JsonIgnore]
+        public User? Owner { get; set; }
+
+        public List<ProductImage> ExtraImages { get; set; } = new();
+
+        public List<ProductSellerContact> SellerContacts { get; set; } = new();
     }
 }

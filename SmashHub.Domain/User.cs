@@ -33,5 +33,8 @@ namespace SmashHub.Domain
 
         [JsonIgnore]
         public List<StringingOrder> StringingOrders { get; set; } = new();
+
+        [JsonIgnore]
+        public List<Product> Products { get; set; } = new();
     }
 }

@@ -36,6 +36,26 @@ namespace SmashHub.Api.Data
                 phone: "+37360000002");
 
             db.SaveChanges();
+
+            SeedUserContacts(db, "eugeniy@smashhub.local", new[]
+            {
+                ("telegram", "eugeniy_smashhub"),
+                ("instagram", "eugeniy.smashhub"),
+                ("viber", "+37360000001"),
+                ("facebook", "eugeniy.smashhub"),
+                ("whatsapp", "+37360000001")
+            });
+
+            SeedUserContacts(db, "anzor@smashhub.local", new[]
+            {
+                ("telegram", "anzor_smashhub"),
+                ("instagram", "anzor.smashhub"),
+                ("viber", "+37360000002"),
+                ("facebook", "anzor.smashhub"),
+                ("whatsapp", "+37360000002")
+            });
+
+            db.SaveChanges();
         }
 
         private static void UpsertUser(
@@ -69,9 +89,44 @@ namespace SmashHub.Api.Data
             }
         }
 
+        private static void SeedUserContacts(
+            SmashHubContext db,
+            string email,
+            IEnumerable<(string Platform, string Value)> contacts)
+        {
+            var user = db.Users
+                .Include(u => u.Contacts)
+                .FirstOrDefault(u => u.Email == email);
+
+            if (user == null) return;
+
+            foreach (var contact in contacts)
+            {
+                if (user.Contacts.Any(c => c.Platform == contact.Platform)) continue;
+
+                user.Contacts.Add(new UserContact
+                {
+                    Platform = contact.Platform,
+                    Value = contact.Value,
+                    UserId = user.Id
+                });
+            }
+        }
+
         private static void SeedProducts(SmashHubContext db)
         {
-            if (db.Products.Any()) return;
+            var admin = db.Users
+                .Include(u => u.Contacts)
+                .FirstOrDefault(u => u.Email == "eugeniy@smashhub.local");
+            var manager = db.Users
+                .Include(u => u.Contacts)
+                .FirstOrDefault(u => u.Email == "anzor@smashhub.local");
+
+            if (db.Products.Any())
+            {
+                BackfillProductOwners(db, admin, manager);
+                return;
+            }
 
             db.Products.AddRange(
                 new Product
@@ -84,7 +139,9 @@ namespace SmashHub.Api.Data
                     Image = "/media/images/200x200_raketki.jpg",
                     ColorLabel = "Black / Silver",
                     Fit = "unisex",
-                    SellerPhone = "+37360000002"
+                    SellerPhone = "+37360000002",
+                    OwnerId = manager?.Id ?? admin?.Id,
+                    SellerContacts = SnapshotContacts(manager ?? admin)
                 },
                 new Product
                 {
@@ -97,7 +154,9 @@ namespace SmashHub.Api.Data
                     SizeLabel = "42",
                     ColorLabel = "White / Blue",
                     Fit = "mens",
-                    SellerPhone = "+37360000001"
+                    SellerPhone = "+37360000001",
+                    OwnerId = admin?.Id ?? manager?.Id,
+                    SellerContacts = SnapshotContacts(admin ?? manager)
                 },
                 new Product
                 {
@@ -109,10 +168,59 @@ namespace SmashHub.Api.Data
                     Image = "/media/images/200x200_struna.jpg",
                     ColorLabel = "Yellow",
                     Fit = "unisex",
-                    SellerPhone = "+37360000002"
+                    SellerPhone = "+37360000002",
+                    OwnerId = manager?.Id ?? admin?.Id,
+                    SellerContacts = SnapshotContacts(manager ?? admin)
                 });
 
             db.SaveChanges();
+        }
+
+        private static void BackfillProductOwners(SmashHubContext db, User? admin, User? manager)
+        {
+            var productsWithoutOwner = db.Products.Where(p => p.OwnerId == null).ToList();
+            if (productsWithoutOwner.Count > 0)
+            {
+                foreach (var product in productsWithoutOwner)
+                {
+                    product.OwnerId = product.SellerPhone == "+37360000001"
+                        ? admin?.Id ?? manager?.Id
+                        : manager?.Id ?? admin?.Id;
+                }
+
+                db.SaveChanges();
+            }
+
+            BackfillProductSellerContacts(db);
+        }
+
+        private static void BackfillProductSellerContacts(SmashHubContext db)
+        {
+            var productsWithoutContacts = db.Products
+                .Include(p => p.Owner)
+                .ThenInclude(u => u!.Contacts)
+                .Include(p => p.SellerContacts)
+                .Where(p => !p.SellerContacts.Any())
+                .ToList();
+
+            foreach (var product in productsWithoutContacts)
+            {
+                product.SellerContacts = SnapshotContacts(product.Owner);
+            }
+
+            db.SaveChanges();
+        }
+
+        private static List<ProductSellerContact> SnapshotContacts(User? user)
+        {
+            return user?.Contacts
+                .Where(contact => !string.IsNullOrWhiteSpace(contact.Platform) && !string.IsNullOrWhiteSpace(contact.Value))
+                .Select(contact => new ProductSellerContact
+                {
+                    Platform = contact.Platform.Trim(),
+                    Value = contact.Value.Trim()
+                })
+                .ToList() ?? new List<ProductSellerContact>();
         }
     }
 }
