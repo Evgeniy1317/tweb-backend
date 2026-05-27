@@ -40,5 +40,8 @@ namespace SmashHub.Domain
         public List<ProductImage> ExtraImages { get; set; } = new();
 
         public List<ProductSellerContact> SellerContacts { get; set; } = new();
+
+        [JsonIgnore]
+        public List<CartItem> CartItems { get; set; } = new();
     }
 }

@@ -36,5 +36,8 @@ namespace SmashHub.Domain
 
         [JsonIgnore]
         public List<Product> Products { get; set; } = new();
+
+        [JsonIgnore]
+        public List<CartItem> CartItems { get; set; } = new();
     }
 }

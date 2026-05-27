@@ -67,6 +67,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<IUser, UserBL>();
 builder.Services.AddScoped<IProduct, ProductBL>();
 builder.Services.AddScoped<IStringingOrder, StringingOrderBL>();
+builder.Services.AddScoped<ICart, CartBL>();
 builder.Services.AddScoped<JwtTokenService>();
 
 var app = builder.Build();
