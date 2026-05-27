@@ -13,6 +13,7 @@ namespace SmashHub.DataAccess
         public DbSet<User> Users { get; set; }
         public DbSet<UserContact> UserContacts { get; set; }
         public DbSet<StringingOrder> StringingOrders { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -42,6 +43,22 @@ namespace SmashHub.DataAccess
                 .HasOne(c => c.Product)
                 .WithMany(p => p.SellerContacts)
                 .HasForeignKey(c => c.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CartItem>()
+                .HasIndex(item => new { item.UserId, item.ProductId })
+                .IsUnique();
+
+            modelBuilder.Entity<CartItem>()
+                .HasOne(item => item.User)
+                .WithMany(user => user.CartItems)
+                .HasForeignKey(item => item.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CartItem>()
+                .HasOne(item => item.Product)
+                .WithMany(product => product.CartItems)
+                .HasForeignKey(item => item.ProductId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<StringingOrder>()
